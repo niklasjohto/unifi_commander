@@ -1,5 +1,7 @@
 import Unifi from "./unifi.js";
 
-const unictrl = new Unifi();
+const unifictrl = new Unifi();
 
-unictrl.connect();
+(async () => {
+  await unifictrl.connect();
+})();
