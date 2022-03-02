@@ -52,11 +52,6 @@ class Unifi {
 
   private async _listen() {
     const eventsURL = `wss://${this.host}/wss/s/${this.site}/events`;
-
-    // const ws = new WebSocket(eventsURL, {
-    //   perMessageDeflate: false,
-    //   agent,
-    // });
   }
 }
 
