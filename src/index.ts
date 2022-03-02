@@ -1,2 +1,5 @@
-const fetch = require("node-fetch");
-const https = require("https");
+import Unifi from "./unifi.js";
+
+const unictrl = new Unifi();
+
+unictrl.connect();
