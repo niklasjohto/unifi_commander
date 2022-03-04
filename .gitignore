@@ -1,5 +1,7 @@
 dist/
 
+.prettierignore
+
 node_modules/
 
 tsconfig.json
