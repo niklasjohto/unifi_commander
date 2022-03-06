@@ -22,12 +22,25 @@ const unifictrl = new Unifi({
 });
 
 (async () => {
-await unifictrl.connect();
+  await unifictrl.connect();
 
-// If you ever need to disconnect manually
-await unifictrl.disconnect();
+  // Call example
+  await unifictrl.call("endpoint", {
+    method: "GET"
+  })
+
+  // Call with payload example 
+  await unifictrl.call("manager", {
+    method: "PUT",
+    payload: "command"
+  })
+
+  // If you ever need to disconnect manually
+  await unifictrl.disconnect();
 })();
 ```
+
+Please refer to the community driven [API documentation](https://ubntwiki.com/products/software/unifi-controller/api) to figure out what endpoints to use
 
 ### Requirements
 
@@ -35,3 +48,4 @@ await unifictrl.disconnect();
 
 - [UniFi Controller](https://www.ui.com/download/unifi/)
 - [Node.js](https://nodejs.org/en/)
+- TypeScript compiler OR [ts-node](https://www.npmjs.com/package/ts-node)
