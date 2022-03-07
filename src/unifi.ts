@@ -1,4 +1,4 @@
-import fetch, { Response } from "node-fetch";
+import fetch, { BodyInit, Response } from "node-fetch";
 import https from "https";
 import { parseCookies } from "./cookies.js";
 
@@ -8,11 +8,12 @@ interface UnifiOptions {
   username?: string;
   password?: string;
   site?: string;
+  sslStrict?: boolean;
 }
 
 interface FetchOptions {
-  method: string;
   payload?: string;
+  method?: string;
 }
 
 type FetchReturn = Promise<Response | void>;
@@ -25,22 +26,27 @@ class Unifi {
   private username: string;
   private password: string;
   private site: string;
+  private sslStrict: boolean;
 
   // Session variables
   private cookies: string;
   private isLoggedIn: boolean = false;
 
-  private agent = new https.Agent({
-    rejectUnauthorized: false,
-  });
+  private agent: https.Agent;
 
   constructor(options?: UnifiOptions) {
     this.port = options?.port ?? 8443;
     this.host = options?.host ?? "unifi";
     this.hostAPI = `https://${this.host}:${this.port}/api`;
+
     this.username = options?.username ?? "admin";
     this.password = options?.password ?? "ubnt";
+
     this.site = options?.site ?? "default";
+    this.sslStrict = options?.sslStrict ?? false;
+    this.agent = new https.Agent({
+      rejectUnauthorized: this.sslStrict,
+    });
   }
 
   public async connect(): Promise<void> {
@@ -97,23 +103,38 @@ class Unifi {
     });
   }
 
-  public async call(endpoint: string, options: FetchOptions): FetchReturn {
+  /**
+   * @description Fetch method with a default configuration
+   *
+   * @param endpoint
+   * @param options
+   * @returns Promise<Response | void>
+   */
+  public async call(endpoint: string, options?: FetchOptions): FetchReturn {
     const date = new Date().toLocaleString("en-DK");
 
     if (!this.isLoggedIn) {
       return console.log(`${date}: You are not logged in`);
-    } else if (options.payload && options.method === "GET") {
-      return console.log(`${date}: You cannot use GET with a payload`);
     }
 
     const endpointURL = `${this.hostAPI}/s/${this.site}/${endpoint}`;
 
+    // Check if user has provided a method or if there's a payload,
+    // POST must be used if there's a payload
+    const method = options?.method ?? options?.payload ? "POST" : "GET";
+
+    // Check if user has provided a payload
+    const body: BodyInit | undefined = options?.payload
+      ? JSON.stringify({ cmd: options.payload })
+      : undefined;
+
     const response = await fetch(endpointURL, {
       agent: this.agent,
+      method: method,
       headers: {
         Cookie: this.cookies,
       },
-      ...options,
+      body,
     });
 
     if (!response.ok) {
@@ -124,7 +145,6 @@ class Unifi {
 
     const data = await response.json();
 
-    console.log(data);
     return data;
   }
 }

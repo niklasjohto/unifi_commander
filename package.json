@@ -16,7 +16,6 @@
   },
   "dependencies": {
     "https": "^1.0.0",
-    "node-fetch": "^2.6.7",
-    "ws": "^8.5.0"
+    "node-fetch": "^2.6.7"
   }
 }
