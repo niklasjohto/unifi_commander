@@ -18,29 +18,60 @@ const unifictrl = new Unifi({
   port: 8433,         // UniFi Controller port                            | default: "8443"
   username: "admin",  // Username                                         | default: "admin"
   password: "ubnt",   // Password                                         | default: "ubnt"
-  site: "default"     // UniFi site to target                             | default: "Default"
+  site: "default",    // UniFi site to target                             | default: "Default"
+  sslStrict: false    // Allow connection even if SSL fails               | default: false
 });
 
 (async () => {
   await unifictrl.connect();
 
   // Call example
-  await unifictrl.call("endpoint", {
-    method: "GET"
-  })
-
-  // Call with payload example 
-  await unifictrl.call("manager", {
-    method: "PUT",
-    payload: "command"
-  })
+  const response = await unifictrl.call("stat/health")
+  console.log(response);
 
   // If you ever need to disconnect manually
   await unifictrl.disconnect();
 })();
 ```
 
+### Methods
+These methods return promises, so use them in an asynchronous manner
+
 Please refer to the community driven [API documentation](https://ubntwiki.com/products/software/unifi-controller/api) to figure out what endpoints to use
+
+**connect(options)** <br>
+Connects to the UniFi Controller
+The options argument is optional  
+
+**disconnect()** <br>
+Disconnects from the UniFi Controller  
+
+**call(path, {options})** <br>
+Request data from the UniFi Controller <br>
+The options argument is optional, though you need it if you use a payload  <br>
+  
+The method option will get set to POST automatically if you have a payload unless you specify otherwise  
+
+### Examples
+
+GET request
+```ts
+  unifi.call("stat/health");
+```
+
+POST request
+```ts
+  unifi.call("cmd/sitemgr", {
+    payload: "get-admins"
+  });
+```
+
+User defined method request
+```ts
+  unifi.call("endpoint", {
+    method: "method"
+  })
+```
 
 ### Requirements
 
