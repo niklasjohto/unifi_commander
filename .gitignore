@@ -4,4 +4,7 @@ dist/
 
 node_modules/
 
+src/index.ts
+
 tsconfig.tsbuildinfo
+src/index.ts
