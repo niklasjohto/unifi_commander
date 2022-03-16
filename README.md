@@ -15,18 +15,19 @@ import Unifi from "./unifi.js";
 
 const unifictrl = new Unifi({
   host: "unifi",      // Hostname or ip address of the UniFi Controller   | default: "unifi"
-  port: 8433,         // UniFi Controller port                            | default: "8443"
+  port: 8443,         // UniFi Controller port                            | default: 8443
   username: "admin",  // Username                                         | default: "admin"
   password: "ubnt",   // Password                                         | default: "ubnt"
   site: "default",    // UniFi site to target                             | default: "Default"
-  sslStrict: false    // Allow connection even if SSL fails               | default: false
+  sslStrict: false,   // Allow connection even if SSL fails               | default: false
+  unifiOS: false      // Set as true if you're using UniFi OS Console     | default: false
 });
 
 (async () => {
   await unifictrl.connect();
 
   // Call example
-  const response = await unifictrl.call("stat/health")
+  const response = await unifictrl.ctrlCall("stat/health")
   console.log(response);
 
   // If you ever need to disconnect manually
@@ -42,33 +43,40 @@ Please refer to the community driven [API documentation](https://ubntwiki.com/pr
 **connect(options)** <br>
 Connects to the UniFi Controller
 The options argument is optional  
-
+<br>
 **disconnect()** <br>
 Disconnects from the UniFi Controller  
-
-**call(path, {options})** <br>
-Request data from the UniFi Controller <br>
+<br>
+**ctrlCall(path, options)** <br>
+This is for endpoints that don't require a site <br>
+The options argument is optional, though you need it if you use a payload  <br>
+  
+The method option will get set to POST automatically if you have a payload unless you specify otherwise
+<br>
+**siteCall(path, options)** <br>
+This is for endpoints that require a site <br>
 The options argument is optional, though you need it if you use a payload  <br>
   
 The method option will get set to POST automatically if you have a payload unless you specify otherwise  
+<br>
 
 ### Examples
 
 GET request
 ```ts
-  unifi.call("stat/health");
+  unifictrl.siteCall("stat/health");
 ```
 
 POST request
 ```ts
-  unifi.call("cmd/sitemgr", {
+  unifictrl.siteCall("cmd/sitemgr", {
     payload: "get-admins"
   });
 ```
 
 User defined method request
 ```ts
-  unifi.call("endpoint", {
+  unifictrl.siteCall("endpoint", {
     method: "method"
   })
 ```
