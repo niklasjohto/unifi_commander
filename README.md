@@ -42,18 +42,15 @@ Please refer to the community driven [API documentation](https://ubntwiki.com/pr
 
 **connect(options)** <br>
 Connects to the UniFi Controller, the options argument is optional  
-<br>
 
 **disconnect()** <br>
 Disconnects from the UniFi Controller  
-<br>
 
 **ctrlCall(path, options)** <br>
 This is for endpoints that don't require a site <br>
 The options argument is optional, though you need it if you use a payload  <br>
   
 The method option will get set to POST automatically if you have a payload unless you specify otherwise
-<br>
 
 **siteCall(path, options)** <br>
 This is for endpoints that require a site <br>
