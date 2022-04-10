@@ -1,6 +1,6 @@
 # UniFi Commander
 
-Currently W.I.P
+I am satisfied with this project so I do not plan on implementing more features
 
 ---
 

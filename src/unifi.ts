@@ -112,6 +112,9 @@ class Unifi {
     return await fetch(endpointURL, {
       method: "POST",
       agent: this.agent,
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({
         // Send the account credentials with the request
         username: this.username,
@@ -127,6 +130,7 @@ class Unifi {
       method: "POST",
       agent: this.agent,
       headers: {
+        "Content-Type": "application/json",
         cookie: this.cookies,
       },
     });
@@ -156,6 +160,7 @@ class Unifi {
       agent: this.agent,
       method: method,
       headers: {
+        "Content-Type": "application/json",
         Cookie: this.cookies,
       },
       body,
